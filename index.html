@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Performance de Mídia</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0f172a', // Background principal
+                            800: '#1e293b', // Cards
+                            700: '#334155', // Bordas
+                        },
+                        brand: {
+                            green: '#10b981',
+                            blue: '#3b82f6',
+                            purple: '#8b5cf6',
+                            orange: '#f59e0b',
+                            red: '#ef4444'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen p-4 md:p-8">
+<script>
+    const senhaCorreta = "ismafer33";
+    const senha = prompt("Digite a senha para acessar:");
+    if (senha !== senhaCorreta) {
+        document.body.innerHTML = "";
+        alert("Senha incorreta!");
+        window.location.href = "https://google.com";
+    }
+</script>
+
+
+    <!-- Header -->
+    <header class="mb-8 flex flex-col md:flex-row justify-between items-center border-b border-dark-700 pb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-white tracking-tight">Dashboard de Performance</h1>
+            <p class="text-gray-400 text-sm mt-1">Análise consolidada por Grupo de Campanha</p>
+        </div>
+        <div class="mt-4 md:mt-0 bg-dark-800 px-4 py-2 rounded-lg border border-dark-700 flex items-center gap-2">
+            <i class="fa-regular fa-calendar text-brand-blue"></i>
+            <span class="text-sm font-medium">Last 30 Days</span>
+        </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Revenue Card -->
+        <div class="bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg hover:border-brand-green transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Receita Total</p>
+                    <h3 class="text-2xl font-bold text-white mt-2" id="totalRevenue">R$ 0,00</h3>
+                </div>
+                <div class="p-3 bg-green-500/10 rounded-lg text-brand-green">
+                    <i class="fa-solid fa-sack-dollar text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-gray-400">
+                <span class="text-brand-green font-semibold mr-1"><i class="fa-solid fa-arrow-trend-up"></i> Alto Volume</span>
+                em Grupo 1
+            </div>
+        </div>
+
+        <!-- Spend Card -->
+        <div class="bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg hover:border-brand-red transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Investimento Total</p>
+                    <h3 class="text-2xl font-bold text-white mt-2" id="totalSpend">R$ 0,00</h3>
+                </div>
+                <div class="p-3 bg-red-500/10 rounded-lg text-brand-red">
+                    <i class="fa-solid fa-chart-pie text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-gray-400">
+                <span class="text-gray-300">Controle de Budget</span>
+            </div>
+        </div>
+
+        <!-- ROAS Card -->
+        <div class="bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg hover:border-brand-purple transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">ROAS Geral (Retorno)</p>
+                    <h3 class="text-2xl font-bold text-white mt-2" id="avgRoas">0.0x</h3>
+                </div>
+                <div class="p-3 bg-purple-500/10 rounded-lg text-brand-purple">
+                    <i class="fa-solid fa-rocket text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-gray-400">
+                Calculado: Receita / Invest.
+            </div>
+        </div>
+
+        <!-- Impressions Card -->
+        <div class="bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg hover:border-brand-blue transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Impressões Totais</p>
+                    <h3 class="text-2xl font-bold text-white mt-2" id="totalImpressions">0</h3>
+                </div>
+                <div class="p-3 bg-blue-500/10 rounded-lg text-brand-blue">
+                    <i class="fa-regular fa-eye text-xl"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-gray-400">
+                <span id="totalClicks" class="text-brand-blue font-semibold mr-1">0</span> Cliques Totais
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Main Bar Chart: Revenue vs Spend -->
+        <div class="lg:col-span-2 bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 text-gray-200">Receita vs. Investimento por Grupo</h3>
+            <div class="relative h-72 w-full">
+                <canvas id="revenueSpendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Doughnut Chart: Share -->
+        <div class="bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg">
+            <h3 class="text-lg font-semibold mb-4 text-gray-200">Share de Receita</h3>
+            <div class="relative h-72 w-full flex justify-center">
+                <canvas id="shareChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- ACOS Analysis -->
+        <div class="lg:col-span-3 bg-dark-800 p-6 rounded-xl border border-dark-700 shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-200">Eficiência: ACOS Médio (%)</h3>
+                <span class="text-xs text-gray-400 bg-dark-900 px-2 py-1 rounded border border-dark-700">Quanto menor, melhor</span>
+            </div>
+            <div class="relative h-60 w-full">
+                <canvas id="acosChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="bg-dark-800 rounded-xl border border-dark-700 shadow-lg overflow-hidden">
+        <div class="p-6 border-b border-dark-700">
+            <h3 class="text-lg font-semibold text-gray-200">Detalhamento dos Dados</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-400">
+                <thead class="bg-dark-900 text-gray-200 uppercase font-medium">
+                    <tr>
+                        <th class="px-6 py-4">Grupo de Campanha</th>
+                        <th class="px-6 py-4 text-right">Impressões</th>
+                        <th class="px-6 py-4 text-right">Cliques</th>
+                        <th class="px-6 py-4 text-right text-brand-green">Receita</th>
+                        <th class="px-6 py-4 text-right text-brand-red">Investimento</th>
+                        <th class="px-6 py-4 text-right">Vendas (Un.)</th>
+                        <th class="px-6 py-4 text-right text-brand-orange">ACOS</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-dark-700" id="tableBody">
+                    <!-- Javascript renders rows here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-gray-600 text-sm pb-8">
+        &copy; 2024 Dashboard Analytics. Generated via AI.
+    </footer>
+
+    <script>
+        // --- 1. DATA PARSING ---
+        // Dados extraídos da imagem fornecida
+        const rawData = [
+            { group: "Grupo 1", imp: 215458068, clicks: 693333, rev: 10808655.00, cost: 662359.50, units: 27440, acos: 6.037 },
+            { group: "Grupo 2", imp: 98675672, clicks: 276231, rev: 3854247.13, cost: 238953.30, units: 15018, acos: 5.248 },
+            { group: "Grupo 3", imp: 31728195, clicks: 178966, rev: 1900000.53, cost: 96425.00, units: 13802, acos: 4.075 },
+            { group: "Lançamentos", imp: 4505557, clicks: 20486, rev: 324224.40, cost: 42932.60, units: 540, acos: 13.655 },
+            { group: "Outras Campanhas", imp: 63854258, clicks: 280704, rev: 3872761.76, cost: 303300.13, units: 11130, acos: 4.708 }
+        ];
+
+        // Formatters
+        const currencyFmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+        const numberFmt = new Intl.NumberFormat('pt-BR');
+        
+        // --- 2. CALCULATE TOTALS ---
+        let totalRev = 0, totalSpend = 0, totalImp = 0, totalClicks = 0;
+        
+        rawData.forEach(d => {
+            totalRev += d.rev;
+            totalSpend += d.cost;
+            totalImp += d.imp;
+            totalClicks += d.clicks;
+        });
+
+        const roas = totalRev / totalSpend;
+
+        // --- 3. UPDATE DOM KPIS ---
+        document.getElementById('totalRevenue').textContent = currencyFmt.format(totalRev);
+        document.getElementById('totalSpend').textContent = currencyFmt.format(totalSpend);
+        document.getElementById('avgRoas').textContent = roas.toFixed(2) + 'x';
+        document.getElementById('totalImpressions').textContent = (totalImp / 1000000).toFixed(1) + 'M';
+        document.getElementById('totalClicks').textContent = (totalClicks / 1000).toFixed(1) + 'k';
+
+        // --- 4. RENDER TABLE ---
+        const tableBody = document.getElementById('tableBody');
+        rawData.forEach(d => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-dark-800 transition duration-150";
+            tr.innerHTML = `
+                <td class="px-6 py-4 font-medium text-white">${d.group}</td>
+                <td class="px-6 py-4 text-right">${numberFmt.format(d.imp)}</td>
+                <td class="px-6 py-4 text-right">${numberFmt.format(d.clicks)}</td>
+                <td class="px-6 py-4 text-right font-medium text-brand-green">${currencyFmt.format(d.rev)}</td>
+                <td class="px-6 py-4 text-right font-medium text-brand-red">${currencyFmt.format(d.cost)}</td>
+                <td class="px-6 py-4 text-right">${numberFmt.format(d.units)}</td>
+                <td class="px-6 py-4 text-right text-brand-orange font-bold">${d.acos.toFixed(2)}%</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        // --- 5. CHARTS CONFIGURATION ---
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = '#334155';
+        
+        // Data Arrays
+        const labels = rawData.map(d => d.group);
+        const revenueData = rawData.map(d => d.rev);
+        const costData = rawData.map(d => d.cost);
+        const acosData = rawData.map(d => d.acos);
+
+        // CHART 1: Revenue vs Spend
+        new Chart(document.getElementById('revenueSpendChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Receita',
+                        data: revenueData,
+                        backgroundColor: '#10b981',
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'Investimento',
+                        data: costData,
+                        backgroundColor: '#ef4444',
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { grid: { borderDash: [2, 4] }, beginAtZero: true },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // CHART 2: Revenue Share
+        new Chart(document.getElementById('shareChart'), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: revenueData,
+                    backgroundColor: [
+                        '#10b981', // Grupo 1
+                        '#3b82f6', // Grupo 2
+                        '#8b5cf6', // Grupo 3
+                        '#f59e0b', // Lançamentos
+                        '#6366f1'  // Outras
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20 } }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // CHART 3: ACOS (Efficiency)
+        new Chart(document.getElementById('acosChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'ACOS Médio (%)',
+                    data: acosData,
+                    borderColor: '#f59e0b', // Amber color for warning/metric
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#f59e0b',
+                    pointRadius: 6,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4] },
+                        title: { display: true, text: 'Porcentagem (%)' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
